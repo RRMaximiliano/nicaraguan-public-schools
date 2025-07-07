@@ -1,0 +1,44 @@
+# R Package Requirements for Nicaragua Schools Analysis
+# Install with: install.packages(c("package1", "package2", ...))
+
+# Core data manipulation and analysis
+tidyverse >= 1.3.0
+dplyr >= 1.0.0
+readr >= 2.0.0
+ggplot2 >= 3.3.0
+tidyr >= 1.1.0
+
+# Spatial analysis and mapping
+sf >= 1.0.0
+leaflet >= 2.0.0
+mapview >= 2.9.0
+raster >= 3.4.0
+
+# Interactive visualizations
+plotly >= 4.9.0
+DT >= 0.18
+htmlwidgets >= 1.5.0
+
+# Statistical analysis
+corrplot >= 0.84
+cluster >= 2.1.0
+factoextra >= 1.0.7
+
+# Data export and formatting
+writexl >= 1.4.0
+knitr >= 1.33
+rmarkdown >= 2.9
+
+# Project organization
+here >= 1.0.1
+usethis >= 2.0.0
+
+# Additional utilities
+stringr >= 1.4.0
+lubridate >= 1.7.0
+scales >= 1.1.0
+RColorBrewer >= 1.1.0
+
+# Performance
+data.table >= 1.14.0
+dtplyr >= 1.1.0
