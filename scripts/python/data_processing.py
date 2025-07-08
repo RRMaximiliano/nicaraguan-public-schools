@@ -1,6 +1,6 @@
 """
 Data Processing Utilities for Nicaragua Schools Dataset
-Author: Nicaragua Schools Data Project
+Author: Rony Rodriguez
 Date: July 2025
 
 This module provides utility functions for cleaning, validating, and processing

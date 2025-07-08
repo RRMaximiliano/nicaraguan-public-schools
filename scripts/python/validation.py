@@ -1,6 +1,6 @@
 """
 Data Validation Tools for Nicaragua Schools Dataset
-Author: Nicaragua Schools Data Project
+Author: Rony Rodriguez
 Date: July 2025
 
 This module provides validation functions to ensure data quality and consistency

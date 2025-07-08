@@ -1,5 +1,5 @@
 # Spatial Analysis of Nicaragua Schools
-# Author: Nicaragua Schools Data Project
+# Author: Rony Rodriguez
 # Date: July 2025
 
 # Load required libraries

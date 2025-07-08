@@ -1,5 +1,5 @@
 # Visualizations for Nicaragua Schools Data
-# Author: Nicaragua Schools Data Project  
+# Author: Rony Rodriguez
 # Date: July 2025
 
 # Load required libraries

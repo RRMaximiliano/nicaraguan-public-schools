@@ -1,3 +1,6 @@
+# UNESCO UIS Data Integration for Nicaragua Schools
+# Author: Rony Rodriguez  
+# Date: July 2025
 
 # Packages ---------------------------------------------------------------
 
