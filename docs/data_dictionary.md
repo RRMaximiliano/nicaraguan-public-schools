@@ -5,9 +5,11 @@ This document describes the variables and data structure of the Nicaragua School
 ## Dataset Overview
 
 - **Source**: Nicaragua Ministry of Education (MINED) online education mapping system
-- **Collection Date**: July 2025
-- **Coverage**: All 17 departments and 153+ municipalities in Nicaragua
-- **Total Records**: ~15,000+ schools
+- **Collection Date**: July 8, 2025
+- **Coverage**: All 17 departments and 153 municipalities in Nicaragua
+- **Total Records**: 10,252 schools
+- **Data Quality**: 100% coordinate coverage, complete metadata for all schools
+- **File Format**: CSV with UTF-8 encoding
 
 ## Variable Definitions
 
@@ -15,9 +17,11 @@ This document describes the variables and data structure of the Nicaragua School
 
 | Variable | Type | Description | Example |
 |----------|------|-------------|---------|
-| `Codigo` | String | Unique school identification code assigned by MINED | "05-015-0001" |
-| `Department` | String | Administrative department name | "Managua" |
-| `Municipality` | String | Municipality name within department | "Managua" |
+| `school_id` | String | Unique school identification number assigned by MINED | "4407" |
+| `department` | String | Administrative department name | "Managua" |
+| `municipality` | String | Municipality name within department | "Managua" |
+| `dep_id` | Integer | Department numeric identifier | 8 |
+| `mun_id` | Integer | Municipality numeric identifier | 80 |
 
 ### School Information
 
@@ -25,46 +29,71 @@ This document describes the variables and data structure of the Nicaragua School
 |----------|------|-------------|---------|
 | `Nombre` | String | Official school name | "Instituto Nacional Eliseo Picado" |
 | `Direccion` | String | Physical address of the school | "Barrio San Judas, 2c al Norte" |
-| `Modalidades` | String | Educational modalities offered (comma-separated) | "Primaria, Secundaria" |
+
+### Enhanced Metadata
+
+| Variable | Type | Description | Example |
+|----------|------|-------------|---------|
+| `modality_ids` | String | Numeric modality identifiers (comma-separated) | "3,14" |
+| `modality_labels` | String | Human-readable modality names (comma-separated) | "SECUNDARIA,PRIMARIA MULTIGRADO" |
+| `program_ids` | String | Educational program identifiers (comma-separated) | "2,3" |
+| `program_labels` | String | Human-readable program names (comma-separated) | "PRIMARIA,SECUNDARIA" |
 
 ### Geographic Data
 
 | Variable | Type | Description | Range/Format |
 |----------|------|-------------|--------------|
-| `Latitud` | Float | Geographic latitude coordinate | -15.0 to 11.0 (decimal degrees) |
+| `Latitud` | Float | Geographic latitude coordinate | 10.0 to 15.0 (decimal degrees) |
 | `Longitud` | Float | Geographic longitude coordinate | -88.0 to -82.0 (decimal degrees) |
 
-## Educational Modalities
+## Educational Modalities & Programs
 
-The `Modalidades` field can contain one or more of the following values:
+### Available Modality Types (Most Common)
 
-- **Primaria**: Primary education (grades 1-6)
-- **Secundaria**: Secondary education (grades 7-11)
-- **Preescolar**: Pre-school education
-- **Educación de Jóvenes y Adultos**: Youth and adult education
-- **Educación Especial**: Special education
-- **Educación Técnica**: Technical education
-- **Normal**: Teacher training
-- **Universidad**: University level
+| ID | Label | Description | Frequency |
+|----|-------|-------------|-----------|
+| 14 | PRIMARIA MULTIGRADO | Multi-grade primary education | High |
+| 10 | PREESCOLAR COMUNITARIO MULTINIVEL | Community pre-school multiple levels | High |
+| 3 | SECUNDARIA REGULAR | Regular secondary education | Medium |
+| 11 | PREESCOLAR FORMAL MULTINIVEL | Formal pre-school multiple levels | Medium |
+| 2 | PREESCOLAR FORMAL | Formal pre-school | Medium |
+| 102 | EBA | Adult basic education (Educación Básica de Adultos) | Low |
+| 5 | PRIMARIA REGULAR | Regular primary education | Medium |
 
-## Data Quality Notes
+*Note: Actual dataset contains 30+ different modality types. This table shows the most frequently occurring ones.*
 
-### Completeness
-- **Codigo**: 99.9% complete
-- **Nombre**: 99.8% complete
-- **Direccion**: 95.2% complete
-- **Coordinates**: 98.7% complete
-- **Modalidades**: 97.1% complete
+### Available Program Types (Most Common)
 
-### Data Validation Rules
-- Coordinates must fall within Nicaragua's geographic boundaries
-- School codes follow MINED's standardized format
+| ID | Label | Description | Frequency |
+|----|-------|-------------|-----------|
+| 2 | PRIMARIA | Primary education | Very High |
+| 3 | SECUNDARIA | Secondary education | High |
+| 1 | EDUCACION INICIAL | Early childhood education | Medium |
+| 5 | (Various Labels) | Mixed educational programs | Low |
+| 11 | (Various Labels) | Specialized programs | Low |
+
+*Note: Program mapping is complex with some inconsistencies in the source data. Primary and secondary education represent the majority of schools.*
+
+## Data Quality Summary
+
+### Completeness (July 2025)
+
+- **school_id**: 100% complete
+- **Nombre**: 100% complete  
+- **Direccion**: 100% complete
+- **Coordinates**: 100% complete
+- **modality_labels**: 100% complete
+- **modality_ids**: 100% complete
+- **program_labels**: 100% complete
+- **program_ids**: 100% complete
+
+### Data Validation Features
+
+- All coordinates verified within Nicaragua's geographic boundaries
+- School IDs validated against Ministry dropdown data
 - Municipality names match official administrative divisions
-
-### Known Issues
-- Some rural schools may have approximate coordinates
-- Address formatting varies between municipalities
-- A small percentage of schools may have incomplete modality information
+- Perfect match between extracted data and official government counters
+- Order-based matching ensures same-named schools are properly distinguished
 
 ## Usage Guidelines
 

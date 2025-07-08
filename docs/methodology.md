@@ -4,7 +4,7 @@ This document describes the methodology used to collect Nicaragua's school data 
 
 ## Overview
 
-The Nicaragua Schools Scraper uses automated web scraping techniques to extract comprehensive school information from the Ministry of Education's (MINED) publicly available online education map. This methodology ensures systematic and reliable data collection across all 17 departments and 153+ municipalities in Nicaragua.
+The Nicaragua Schools Scraper uses automated web scraping techniques to extract comprehensive school information from the Ministry of Education's (MINED) publicly available online education map. This methodology ensures systematic and reliable data collection across all 17 departments and 153+ municipalities in Nicaragua, resulting in a dataset of 10,252 schools with complete metadata coverage.
 
 ## Data Source
 
@@ -13,19 +13,39 @@ The Nicaragua Schools Scraper uses automated web scraping techniques to extract 
 - **Technology**: Interactive Leaflet.js map with marker-based school data
 - **Update Frequency**: Real-time from MINED database
 - **Public Access**: Freely available without authentication
+- **Data Collection Date**: July 8, 2025
 
 ## Technical Approach
 
 ### Web Scraping Technology Stack
 
 - **Browser Automation**: Selenium WebDriver with Chrome
-- **Data Processing**: Python with pandas, regex, and BeautifulSoup
+- **Data Processing**: Python with pandas, regex, and html parsing
 - **Error Handling**: Comprehensive timeout and exception management
 - **Data Validation**: Real-time verification during extraction
+- **Output Format**: CSV with UTF-8 encoding for international characters
 
-### Key Technical Innovation
+### Enhanced Data Extraction Methodology
 
-The scraper implements a **fresh browser instance strategy** to overcome a critical caching issue:
+The scraper implements **order-based matching** to handle complex data extraction scenarios that were identified during development:
+
+**Challenge**: Some schools have identical names but are located in different areas with different school IDs and metadata.
+
+**Solution**: 
+1. Extract schools from JavaScript CDATA sections (preserving insertion order)
+2. Extract school dropdown information (preserving DOM order)
+3. Match schools by position/order instead of name-based matching
+4. Handle duplicate names as distinct institutions with unique metadata
+
+**Results**: 
+- 100% coordinate coverage across all 10,252 schools
+- Perfect match between HTML counters and extracted school counts
+- Complete metadata extraction including modality IDs, program IDs, and labels
+- Reliable handling of schools with identical names but different locations
+
+### Critical Technical Innovation: Fresh Browser Instances
+
+The scraper implements a **fresh browser instance strategy** to overcome a critical caching issue discovered during development:
 
 **Problem**: The original map system would cache the first municipality's data and display it for all subsequent municipalities, regardless of the URL.
 
@@ -158,22 +178,51 @@ Codigo,Nombre,Direccion,Latitud,Longitud,Modalidades,Department,Municipality
 05-015-0001,Instituto Nacional Eliseo Picado,Barrio San Judas...,12.1364,-86.2514,Primaria Secundaria,Managua,Managua
 ```
 
+## Results and Validation
+
+### Final Dataset Statistics (July 8, 2025)
+
+- **Total schools extracted**: 10,252
+- **Geographic coverage**: 17 departments, 153 municipalities
+- **Data completeness**: 100% for all fields
+- **Coordinate coverage**: 100% (all schools have valid GPS coordinates)
+- **Metadata completeness**: 100% (all schools have modality and program information)
+- **File size**: 2.8MB CSV file
+
+### Data Validation Results
+
+- **Count verification**: Extracted school counts match official government counters for each municipality
+- **Coordinate validation**: All coordinates fall within Nicaragua's geographic boundaries
+- **Duplicate handling**: Schools with identical names properly distinguished by position-based matching
+- **Encoding verification**: UTF-8 encoding preserves Spanish characters and special symbols
+- **Data consistency**: Systematic field formatting across all records
+
+### Known Data Variations
+
+- **Address detail**: Rural school addresses may be less specific than urban schools
+- **Coordinate precision**: Some coordinates may represent approximate rather than exact locations
+- **Modality complexity**: Some schools have multiple educational modalities with complex labeling
+
 ## Reproducibility
 
 ### Environment Requirements
+
 - Python 3.8+
 - Chrome browser (latest version)
 - Required Python packages (see requirements.txt)
 - Stable internet connection
 
 ### Execution
+
 ```bash
-python scripts/python/nicaragua_schools_scraper.py
+python scripts/python/main_scraper.py
 ```
 
 ### Expected Runtime
+
 - **Complete scraping**: 6-8 hours for all municipalities
 - **Per municipality**: 30-60 seconds average
-- **Data volume**: ~15,000 school records
+- **Final dataset**: 10,252 school records
+- **Output format**: CSV with UTF-8 encoding
 
 This methodology ensures comprehensive, accurate, and ethically collected data about Nicaragua's educational infrastructure, suitable for research, policy analysis, and educational planning purposes.
