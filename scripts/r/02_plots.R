@@ -4,76 +4,129 @@
 
 # Load required libraries
 library(tidyverse)
-library(sf)
-library(leaflet)
-library(plotly)
-library(ggplot2)
+library(stringi)
+library(hrbrthemes)
 
 # Set up paths
-data_path <- here::here("data", "outputs")
-output_path <- here::here("data", "outputs")
+data_path   <- here::here("data")
+output_path <- here::here("outputs")
 
 # Load data
-schools_data <- read_csv(file.path(data_path, "nicaragua_schools_clean.csv"))
-department_summary <- read_csv(file.path(data_path, "department_spatial_summary.csv"))
-
-cat("=== CREATING VISUALIZATIONS ===\n")
-
-# 1. Schools by Department Bar Chart
-dept_plot <- ggplot(department_summary, aes(x = reorder(Department, school_count), y = school_count)) +
-  geom_col(fill = "steelblue", alpha = 0.8) +
-  coord_flip() +
+schools_data <- read_csv(file.path(data_path, "processed/nicaragua_schools_clean.csv")) %>% 
+  # Remove accents in strings: department and municipality
+  mutate(
+    across(
+      .cols = c(department, municipality),
+      .fns  = ~ stri_trans_general(., "Latin-ASCII")
+    )
+  )  
+  
+# Schools by Department 
+schools_data %>% 
+  count(department) %>% 
+  ggplot(
+    aes(
+      x = n, 
+      y = reorder(department, n)
+    )
+  ) +
+  geom_col(color = "black") +
+  geom_text(
+    aes(label = format(n, big.mark = ",", scientific = FALSE)), 
+    hjust = -0.2, 
+    size = 3.5, 
+    color = "black",
+    family = "Econ Sans Cnd"
+  ) + 
+  coord_cartesian(clip = "off") +
   labs(
     title = "Number of Schools by Department",
     subtitle = "Nicaragua Educational Infrastructure",
-    x = "Department",
-    y = "Number of Schools",
-    caption = "Source: Nicaragua Ministry of Education"
-  ) +
-  theme_minimal() +
+    y = NULL,
+    x = "Number of Schools",
+    caption = "Source: Nicaragua Ministry of Education ⋅ Plot: @rrmaximiliano"
+  ) + 
+  theme_ipsum_es() +
   theme(
-    plot.title = element_text(size = 14, face = "bold"),
-    plot.subtitle = element_text(size = 12),
-    axis.text = element_text(size = 10)
+    panel.grid.minor.x = element_blank(),
   )
 
 # Save the plot
-ggsave(file.path(output_path, "schools_by_department.png"), 
-       dept_plot, width = 10, height = 6, dpi = 300)
+ggsave(file.path(output_path, "figs/schools_by_department.png"), width = 10, height = 6, dpi = 300, bg = "white")
 
-# 2. Interactive Map (basic version)
-if (all(c("Latitud", "Longitud") %in% names(schools_data))) {
-  # Sample schools for interactive map (to avoid performance issues)
-  schools_sample <- schools_data %>%
-    filter(!is.na(Latitud) & !is.na(Longitud)) %>%
-    sample_n(min(1000, nrow(.)))  # Sample up to 1000 schools
-  
-  # Create interactive map
-  schools_map <- leaflet(schools_sample) %>%
-    addTiles() %>%
-    addCircleMarkers(
-      lng = ~Longitud,
-      lat = ~Latitud,
-      radius = 3,
-      popup = ~paste0(
-        "<strong>", Nombre, "</strong><br>",
-        "Department: ", Department, "<br>",
-        "Municipality: ", Municipality, "<br>",
-        "Address: ", Direccion
-      ),
-      clusterOptions = markerClusterOptions()
-    ) %>%
-    setView(lng = -85.2, lat = 12.9, zoom = 7)
-  
-  # Save map as HTML
-  htmlwidgets::saveWidget(
-    schools_map, 
-    file.path(output_path, "nicaragua_schools_map.html"),
-    selfcontained = TRUE
+# Schools by Municipalities, Top 15
+schools_data %>% 
+  count(municipality) %>% 
+  top_n(15, n) %>% 
+  ggplot(
+    aes(
+      x = n, 
+      y = reorder(municipality, n)
+    )
+  ) +
+  geom_col(color = "black") +
+  geom_text(
+    aes(label = format(n, big.mark = ",", scientific = FALSE)), 
+    hjust = -0.2, 
+    size = 3.5, 
+    color = "black",
+    family = "Econ Sans Cnd"
+  ) + 
+  coord_cartesian(clip = "off") +
+  labs(
+    title = "Top 15 Municipalities by Number of Schools",
+    subtitle = "Nicaragua Educational Infrastructure",
+    y = NULL,
+    x = "Number of Schools",
+    caption = "Source: Nicaragua Ministry of Education ⋅ Plot: @rrmaximiliano"
+  ) + 
+  theme_ipsum_es() +
+  theme(
+    panel.grid.minor.x = element_blank(),
   )
-}
 
-cat("Visualizations created successfully!\n")
-cat("Files saved to:", output_path, "\n")
-cat("- schools_by_department.png: Bar chart of schools by department\n")
-cat("- nicaragua_schools_map.html: Interactive map of schools\n")
+ggsave(file.path(output_path, "figs/schools_by_municipality.png"), width = 10, height = 6, dpi = 300, bg = "white")
+
+
+# Schools by Modality
+modality_counts <- schools_data %>% 
+  select(-c(modality_labels_1:modality_labels_10)) %>% 
+  separate_rows(modality_labels, sep = ",") %>%
+  # count how many schools have each modality
+  count(modality = modality_labels) %>%
+  arrange(desc(n))
+
+# Select top N modalities (e.g. top 10)
+top_modality_counts <- modality_counts %>%
+  slice_head(n = 10)
+
+# Plot horizontal bar chart
+top_modality_counts %>% 
+  ggplot(
+    aes(
+      x = n, 
+      y = reorder(modality, n)
+    )
+  ) +
+  geom_col(color = "black") +
+  geom_text(
+    aes(label = format(n, big.mark = ",", scientific = FALSE)), 
+    hjust = -0.2, 
+    size = 3.5, 
+    color = "black",
+    family = "Econ Sans Cnd"
+  ) +
+  coord_cartesian(clip = "off") +
+  labs(
+    title = "Top 10 School Modalities in Nicaragua",
+    subtitle = "Diverse Educational Offerings",
+    y = NULL,
+    x = "Number of Schools",
+    caption = "Source: Nicaragua Ministry of Education ⋅ Plot: @rrmaximiliano"
+  ) +
+  theme_ipsum_es() +
+  theme(
+    panel.grid.minor.x = element_blank(),
+  )
+
+ggsave(file.path(output_path, "figs/schools_by_modality.png"), width = 10, height = 6, dpi = 300, bg = "white")

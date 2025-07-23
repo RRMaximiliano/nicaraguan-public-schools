@@ -8,6 +8,13 @@ This project creates a complete, structured dataset of Nicaragua's schools throu
 
 The primary motivation for this work was to address the lack of accessible, structured educational data for Nicaragua. While the Ministry of Education maintains an online mapping system, there was no readily available dataset that researchers could use for systematic analysis of the country's educational infrastructure.
 
+## Figures
+
+![Schools by Department](outputs/figs/schools_by_department.png)
+![Schools by Municipality](outputs/figs/schools_by_municipality.png)
+![Schools by Modality](outputs/figs/schools_by_modality.png)
+![Pupil-Trained Teacher Ratio](outputs/figs/pupil_trained_teacher_ratio_ca.png)
+
 ## Dataset Information
 
 The complete dataset includes information for **10,252 schools** across Nicaragua's 17 departments and 153 municipalities. This represents comprehensive coverage of public educational institutions as of July 2025, including schools in remote rural areas that were previously difficult to catalog systematically.
@@ -192,15 +199,6 @@ This dataset enables various types of educational research and analysis:
 - **Infrastructure planning**: Support for educational infrastructure development and resource allocation decisions
 - **Spatial analysis**: GIS-based studies of educational service coverage and geographic gaps
 - **Comparative studies**: Baseline data for longitudinal studies of Nicaragua's education system
-
-## Citation
-
-If you use this dataset in your research, please cite this repository and acknowledge the data source:
-
-```text
-Nicaragua Schools Dataset (2025). Collected from Nicaragua Ministry of Education online mapping system. 
-Available at: [repository URL]
-```
 
 ## Contributing
 

@@ -6,14 +6,9 @@
 library(tidyverse)
 
 # Set up paths and configuration
-data_path <- here::here("data")
+data_path   <- here::here("data")
 output_path <- here::here("data", "outputs")
-raw_path <- here::here("data", "raw")
-
-# Ensure output directory exists
-if (!dir.exists(output_path)) {
-  dir.create(output_path, recursive = TRUE)
-}
+raw_path    <- here::here("data", "raw")
 
 # Load the data
 schools_data <- read_csv(file.path(raw_path, "nicaraguan_schools_250708.csv"))
@@ -37,7 +32,7 @@ max_modalities <- schools_data %>%
   map_int(length) %>%
   max(na.rm = TRUE)
 
-new_names <- str_c("program_labels_", 1:max_labels)
+new_names          <- str_c("program_labels_", 1:max_labels)
 new_modality_names <- str_c("modality_labels_", 1:max_modalities)
 
 schools_data <- schools_data %>%
@@ -60,11 +55,8 @@ schools_data <- schools_data %>%
       sep = ",\\s*",
       fill = "right",
       remove = FALSE
-    ) %>%
-      select(all_of(new_modality_names))
-  )
-
-schools_data <- schools_data %>%
+    ) %>% select(all_of(new_modality_names))
+  ) %>% 
   janitor::clean_names() %>%
   select(
     department,
@@ -83,3 +75,5 @@ schools_data <- schools_data %>%
     modality_labels,
     starts_with("modality_labels_")
   )
+
+schools_data %>% write_csv("data/processed/nicaragua_schools_clean.csv")
