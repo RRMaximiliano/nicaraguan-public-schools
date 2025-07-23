@@ -6,6 +6,7 @@
 library(tidyverse)
 library(stringi)
 library(hrbrthemes)
+library(ggtext)
 
 # Set up paths
 data_path   <- here::here("data")
@@ -30,7 +31,7 @@ schools_data %>%
       y = reorder(department, n)
     )
   ) +
-  geom_col(color = "black") +
+  geom_col(color = "black", fill = "grey", width = 0.6) +
   geom_text(
     aes(label = format(n, big.mark = ",", scientific = FALSE)), 
     hjust = -0.2, 
@@ -44,11 +45,12 @@ schools_data %>%
     subtitle = "Nicaragua Educational Infrastructure",
     y = NULL,
     x = "Number of Schools",
-    caption = "Source: Nicaragua Ministry of Education ⋅ Plot: @rrmaximiliano"
+    caption = "**Source**: Nicaragua Ministry of Education ⋅ **Plot**: @rrmaximiliano"
   ) + 
   theme_ipsum_es() +
   theme(
     panel.grid.minor.x = element_blank(),
+    plot.caption = element_markdown(),
   )
 
 # Save the plot
@@ -64,7 +66,7 @@ schools_data %>%
       y = reorder(municipality, n)
     )
   ) +
-  geom_col(color = "black") +
+  geom_col(color = "black", fill = "grey", width = 0.6) +
   geom_text(
     aes(label = format(n, big.mark = ",", scientific = FALSE)), 
     hjust = -0.2, 
@@ -78,11 +80,12 @@ schools_data %>%
     subtitle = "Nicaragua Educational Infrastructure",
     y = NULL,
     x = "Number of Schools",
-    caption = "Source: Nicaragua Ministry of Education ⋅ Plot: @rrmaximiliano"
+    caption = "**Source**: Nicaragua Ministry of Education ⋅ **Plot**: @rrmaximiliano"
   ) + 
   theme_ipsum_es() +
   theme(
     panel.grid.minor.x = element_blank(),
+    plot.caption = element_markdown(),
   )
 
 ggsave(file.path(output_path, "figs/schools_by_municipality.png"), width = 10, height = 6, dpi = 300, bg = "white")
@@ -108,7 +111,7 @@ top_modality_counts %>%
       y = reorder(modality, n)
     )
   ) +
-  geom_col(color = "black") +
+  geom_col(color = "black", fill = "grey", width = 0.6) +
   geom_text(
     aes(label = format(n, big.mark = ",", scientific = FALSE)), 
     hjust = -0.2, 
@@ -122,11 +125,12 @@ top_modality_counts %>%
     subtitle = "Diverse Educational Offerings",
     y = NULL,
     x = "Number of Schools",
-    caption = "Source: Nicaragua Ministry of Education ⋅ Plot: @rrmaximiliano"
+    caption = "**Source**: Nicaragua Ministry of Education ⋅ **Plot**: @rrmaximiliano"
   ) +
   theme_ipsum_es() +
   theme(
     panel.grid.minor.x = element_blank(),
+    plot.caption = element_markdown(),
   )
 
 ggsave(file.path(output_path, "figs/schools_by_modality.png"), width = 10, height = 6, dpi = 300, bg = "white")

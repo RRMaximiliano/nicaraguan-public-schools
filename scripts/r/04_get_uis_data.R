@@ -5,6 +5,8 @@
 # Packages ---------------------------------------------------------------
 
 library(tidyverse)
+library(ggtext)
+library(hrbrthemes)
 library(uisapi)
 
 # Get Data ---------------------------------------------------------------
@@ -38,13 +40,14 @@ nicaragua_teachers %>%
     y = "Pupil-trained teacher ratio in secondary education (headcount basis)",
     title = "Pupil-trained Teacher Ratio in Secondary Education",
     subtitle = "Nicaragua and Central America (1990-2024)",
-    caption = "Source: UNESCO Institute for Statistics (UIS) ⋅ Plot: @rrmaximiliano"
+    caption = "**Source**: UNESCO Institute for Statistics (UIS) ⋅ **Plot**: @rrmaximiliano"
   ) +
   theme_ipsum_es() +
   theme(
     legend.position = "none",
     plot.title = element_text(hjust = 0, size = 16, face = "bold"),
-    plot.subtitle = element_text(hjust = 0, size = 14)
+    plot.subtitle = element_text(hjust = 0, size = 14),
+    plot.caption = element_markdown(),
   )
 
 ggsave(file.path(output_path, "figs/pupil_trained_teacher_ratio_ca.png"), width = 10, height = 6, dpi = 300, bg = "white")
