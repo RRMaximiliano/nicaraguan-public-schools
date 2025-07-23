@@ -173,13 +173,16 @@ python scripts/python/main_scraper.py
 
 ```r
 # Load and explore the data
-source("scripts/r/01_descstats.R")
+source("scripts/r/01_cleaning.R")
 
 # Perform spatial analysis
-source("scripts/r/02_spatial_analysis.R")
+source("scripts/r/02_plots.R")
 
 # Create visualizations
-source("scripts/r/03_visualizations.R")
+source("scripts/r/03_spational_analysis.R")
+
+# Using UNESCO Data
+source("scripts/r/04_get_uis_data.R")
 ```
 
 ## License

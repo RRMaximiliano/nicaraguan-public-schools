@@ -91,3 +91,7 @@ test_*
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+README.html
+
+*.html
